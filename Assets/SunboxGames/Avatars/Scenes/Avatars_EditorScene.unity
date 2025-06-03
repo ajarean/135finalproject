@@ -9292,6 +9292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2050411846241618747}
   - component: {fileID: 2050411846241618746}
+  - component: {fileID: 2050411846241618748}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Untagged
@@ -9369,6 +9370,22 @@ Transform:
   - {fileID: 2017119814935085467}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2050411846241618748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050411846241618745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82175c2bb53f142478b8329f15923bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vrHead: {fileID: 657672148}
+  modelHead: {fileID: 3935893565820035404}
+  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &2050411846352862176
 MonoBehaviour:
   m_ObjectHideFlags: 0
