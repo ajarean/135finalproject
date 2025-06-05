@@ -54,6 +54,80 @@ namespace Sunbox.Avatars {
         
         private List<SliderWrapper> _sliders = new List<SliderWrapper>();
 
+        public GameObject LeftHandController;
+        public GameObject RightHandController;
+
+        void Update()
+        {
+            CheckButtonInteraction(LeftHandController);
+            CheckButtonInteraction(RightHandController);
+            
+            Camera.transform.position = Vector3.Lerp(Camera.transform.position, _isZoomed ? _zoomedPosition : _cameraPosition, 2f * Time.deltaTime);
+            Camera.transform.rotation = Quaternion.Lerp(Camera.transform.rotation, _isZoomed ? Quaternion.Euler(_zoomedRotation) : Quaternion.Euler(_cameraRotation), 2 * Time.deltaTime);
+        }
+
+        private void CheckButtonInteraction(GameObject controller)
+        {
+            foreach (Button button in new[] { MaleButton, FemaleButton, BodyButton, FaceButton, FeaturesButton, ClothingButton, RandomizeButton })
+            {
+                RectTransform rectTransform = button.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    Vector3 buttonPosition = rectTransform.position;
+                    float distance = Vector3.Distance(controller.transform.position, buttonPosition);
+
+                    if (distance <= 0.2f && OVRInput.GetDown(OVRInput.Button.One))
+                    {
+                        Debug.Log($"Button {button.name} clicked by controller at position {controller.transform.position}");
+
+                        button.onClick.Invoke();
+                    }
+                }
+            }
+
+            foreach (Dropdown dropdown in controller.GetComponentsInChildren<Dropdown>())
+            {
+                RectTransform rectTransform = dropdown.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    Vector3 dropdownPosition = rectTransform.position;
+                    float distance = Vector3.Distance(controller.transform.position, dropdownPosition);
+                    if (distance <= 0.2f && OVRInput.GetDown(OVRInput.Button.One))
+                    {
+                        if (dropdown.gameObject.activeSelf)
+                        {
+                            dropdown.Hide();
+                        }
+                        else
+                        {
+                            dropdown.Show();
+                        }
+                    }
+                    if (distance <= 0.2f && OVRInput.GetDown(OVRInput.Button.One))
+                    {
+                        Debug.Log($"Dropdown {dropdown.name} interacted by controller at position {controller.transform.position}");
+                        dropdown.onValueChanged.Invoke(dropdown.value);
+                    }
+                }
+            }
+
+            foreach (Slider slider in controller.GetComponentsInChildren<Slider>())
+            {
+                RectTransform rectTransform = slider.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    Vector3 sliderPosition = rectTransform.position;
+                    float distance = Vector3.Distance(controller.transform.position, sliderPosition);
+                    float thumbstickValue = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick).y;
+                    if (distance <= 0.2f && thumbstickValue > 0.1f)
+                    {
+                        slider.value = Mathf.Clamp(slider.value + thumbstickValue * Time.deltaTime, slider.minValue, slider.maxValue);
+                        Debug.Log($"Slider {slider.name} adjusted by controller at position {controller.transform.position}");
+                    }
+                }
+            }
+        }
+
         void Start() {
             _cameraPosition = Camera.transform.position;
             _cameraRotation = Camera.transform.eulerAngles;
@@ -128,11 +202,6 @@ namespace Sunbox.Avatars {
             SliderTemplate.SetActive(false);
             TitleTemplate.SetActive(false);
             ClothingItemDropdownTemplate.SetActive(false);
-        }
-
-        void Update() {
-            Camera.transform.position = Vector3.Lerp(Camera.transform.position, _isZoomed ? _zoomedPosition : _cameraPosition, 2f * Time.deltaTime);
-            Camera.transform.rotation = Quaternion.Lerp(Camera.transform.rotation, _isZoomed ? Quaternion.Euler(_zoomedRotation) : Quaternion.Euler(_cameraRotation), 2 * Time.deltaTime);
         }
 
         private void UpdateSliderList_Internal() {

@@ -225,8 +225,18 @@ namespace Sunbox.Avatars {
             UpdateClothing_Internal();
         }
 
-        void Update() {
+        void Update()
+        {
             UpdateBlinking_Internal();
+            // if (OVRInput.GetDown(OVRInput.Button.One)) // Button A
+            // {
+            //     RandomizeClothing();
+            // }
+
+            // if (OVRInput.GetDown(OVRInput.Button.Two)) // Button B
+            // {
+            //     RandomizeBodyParameters();
+            // }
         }
 
         /// <summary>
